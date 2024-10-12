@@ -12,7 +12,7 @@ const COMMENTS = [
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-]
+];
 
 const NAMES = [
   'Артем',
@@ -49,7 +49,7 @@ function createPhotoDescription() {
   const id = getDescriptionId();
   return ({
     id: id,
-    url: "photos/" + id + ".jpg",
+    url: `photos/${id}.jpg`,
     description: DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length - 1)],
     likes: getRandomInt(15, 200),
     comments: Array.from({ length: getRandomInt(0, 30) }, createComment),
@@ -60,7 +60,7 @@ function createComment() {
   const getCommentId = createRandomId(0,30);
   return ({
     id: getCommentId(),
-    avatar: "img/avatar-" + getRandomInt(1, 6) + ".svg",
+    avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
     message: COMMENTS[getRandomInt(0, COMMENTS.length - 1)],
     name: NAMES[getRandomInt(0, NAMES.length - 1)],
   });
@@ -68,4 +68,4 @@ function createComment() {
 
 const photoDescriptions = Array.from({length: 25}, createPhotoDescription);
 
-// console.log(photoDescriptions);
+console.log(photoDescriptions);
