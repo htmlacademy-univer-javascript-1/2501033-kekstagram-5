@@ -1,5 +1,6 @@
 import './util.js';
 import './data.js';
-import {photoDescriptions} from './data.js';
+import render from './thumbnails-render.js';
 
-// console.log(photoDescriptions);
+
+render();
