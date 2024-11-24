@@ -1,8 +1,9 @@
 import { photoDescriptions } from './data.js';
+import renderBigPicture from './full-picture-view.js';
 
 function renderThumbnails() {
   const picturesContainer = document.querySelector('.pictures');
-  const pictureTemplate = document.querySelector('#picture').content;
+  const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const fragment = document.createDocumentFragment();
 
   photoDescriptions.forEach((photo) => {
@@ -15,6 +16,11 @@ function renderThumbnails() {
     pictureImg.alt = photo.description;
     pictureLikes.textContent = photo.likes;
     pictureComments.textContent = photo.comments.length;
+
+    pictureElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      renderBigPicture(photo);
+    });
 
     fragment.append(pictureElement);
   });
