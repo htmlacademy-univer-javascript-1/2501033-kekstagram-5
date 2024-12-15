@@ -1,3 +1,5 @@
+import { sendData } from './api.js';
+
 const uploadFileInput = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadCancelButton = document.querySelector('#upload-cancel');
@@ -18,10 +20,10 @@ const onFileInputChange = () => {
 };
 
 const closeUploadOverlay = () => {
+  // eslint-disable-next-line no-use-before-define
+  resetFormState();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  uploadForm.reset();
-  pristine.reset();
 };
 
 uploadCancelButton.addEventListener('click', (evt) => {
@@ -99,13 +101,92 @@ const getHashtagsErrorMessage = (value) => {
 
 pristine.addValidator(hashtagsInput, validateHashtags, getHashtagsErrorMessage);
 
+const showErrorMessage = (message) => {
+  const errorTemplate = document.querySelector('#error').content.cloneNode(true);
+  const errorMessage = errorTemplate.querySelector('.error__title');
+  errorMessage.textContent = message;
+
+  document.body.append(errorTemplate);
+
+  const errorButton = document.querySelector('.error__button');
+  errorButton.addEventListener('click', () => {
+    document.querySelector('.error').remove();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      document.querySelector('.error').remove();
+    }
+  });
+
+  document.addEventListener('click', (evt) => {
+    if (!evt.target.closest('.error__inner')) {
+      document.querySelector('.error').remove();
+    }
+  });
+};
+
+const showSuccessMessage = () => {
+  const successTemplate = document.querySelector('#success').content.cloneNode(true);
+  document.body.append(successTemplate);
+
+  const successButton = document.querySelector('.success__button');
+  successButton.addEventListener('click', () => {
+    document.querySelector('.success').remove();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      document.querySelector('.success').remove();
+    }
+  });
+
+  document.addEventListener('click', (evt) => {
+    if (!evt.target.closest('.success__inner')) {
+      document.querySelector('.success').remove();
+    }
+  });
+};
+
+const resetFormState = () => {
+  uploadForm.reset();
+  pristine.reset();
+  const imgPreview = document.querySelector('.img-upload__preview img');
+  imgPreview.style.transform = '';
+  imgPreview.style.filter = '';
+  const effectLevelSlider = document.querySelector('.effect-level__slider');
+  const effectLevelValue = document.querySelector('.effect-level__value');
+  if (effectLevelSlider && effectLevelSlider.noUiSlider) {
+    effectLevelSlider.noUiSlider.set(100);
+  }
+  if (effectLevelValue) {
+    effectLevelValue.value = 100;
+  }
+  const defaultEffect = document.querySelector('#effect-none');
+  if (defaultEffect) {
+    defaultEffect.checked = true;
+  }
+  if (imgPreview) {
+    imgPreview.className = '';
+    imgPreview.style.filter = '';
+  }
+};
+
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
     submitButton.disabled = true;
-    uploadForm.submit();
-    submitButton.disabled = false;
-    closeUploadOverlay();
+    sendData(new FormData(uploadForm))
+      .then(() => {
+        showSuccessMessage();
+        closeUploadOverlay();
+      })
+      .catch(() => {
+        showErrorMessage('Не удалось отправить данные.');
+      })
+      .finally(() => {
+        submitButton.disabled = false;
+      });
   }
 });
