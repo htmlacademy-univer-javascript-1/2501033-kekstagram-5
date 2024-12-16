@@ -1,13 +1,14 @@
 import renderBigPicture from './full-picture-view.js';
 import { getData } from './api.js';
+import { showFilters, setupFilters } from './filter.js';
 
 function renderThumbnails() {
   const picturesContainer = document.querySelector('.pictures');
   const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const fragment = document.createDocumentFragment();
 
-  getData().then((photoDescriptions) => {
-    photoDescriptions.forEach((photo) => {
+  const renderPhotos = (photos) => {
+    photos.forEach((photo) => {
       const pictureElement = pictureTemplate.cloneNode(true);
       const pictureImg = pictureElement.querySelector('.picture__img');
       const pictureLikes = pictureElement.querySelector('.picture__likes');
@@ -27,6 +28,12 @@ function renderThumbnails() {
     });
 
     picturesContainer.append(fragment);
+  };
+
+  getData().then((photos) => {
+    renderPhotos(photos);
+    setupFilters(photos, renderPhotos); 
+    showFilters();
   }).catch(() => {
     showError('Ошибка загрузки фотографий.');
   });
