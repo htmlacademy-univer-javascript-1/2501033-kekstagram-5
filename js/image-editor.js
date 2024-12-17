@@ -137,6 +137,10 @@ function initEffects() {
     start: currentEffect.start,
     step: currentEffect.step,
     connect: 'lower',
+    format: {
+      to: (value) => value % 1 === 0 ? value.toFixed(0) : value.toFixed(1),
+      from: (value) => parseFloat(value),
+    },
   });
 
   effectLevelContainer.style.display = 'none';

@@ -1,4 +1,5 @@
 import { sendData } from './api.js';
+import { onFileUpload } from './image-upload.js';
 
 const uploadFileInput = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -15,9 +16,12 @@ const pristine = new Pristine(uploadForm, {
 });
 
 const onFileInputChange = () => {
+  onFileUpload();
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 };
+
+uploadFileInput.addEventListener('change', onFileInputChange);
 
 const closeUploadOverlay = () => {
   // eslint-disable-next-line no-use-before-define
@@ -100,6 +104,20 @@ const getHashtagsErrorMessage = (value) => {
 };
 
 pristine.addValidator(hashtagsInput, validateHashtags, getHashtagsErrorMessage);
+
+const MAX_COMMENT_LENGTH = 140;
+
+const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
+
+const getCommentErrorMessage = () => `Комментарий не должен превышать ${MAX_COMMENT_LENGTH} символов!`;
+
+pristine.addValidator(commentsTextarea, validateComment, getCommentErrorMessage);
+
+commentsTextarea.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape') {
+    evt.stopPropagation();
+  }
+});
 
 const showErrorMessage = (message) => {
   const errorTemplate = document.querySelector('#error').content.cloneNode(true);
