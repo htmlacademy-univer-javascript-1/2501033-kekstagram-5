@@ -32,7 +32,7 @@ function renderThumbnails() {
 
   getData().then((photos) => {
     renderPhotos(photos);
-    setupFilters(photos, renderPhotos); 
+    setupFilters(photos, renderPhotos);
     showFilters();
   }).catch(() => {
     showError('Ошибка загрузки фотографий.');
