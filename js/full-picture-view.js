@@ -1,7 +1,7 @@
 const bigPictureElement = document.querySelector('.big-picture');
 const bigPictureImg = bigPictureElement.querySelector('.big-picture__img img');
 const likesCountElement = bigPictureElement.querySelector('.likes-count');
-const commentsCountElement = bigPictureElement.querySelector('.comments-count');
+const commentsCountElement = bigPictureElement.querySelector('.social__comment-total-count');
 const socialCaptionElement = bigPictureElement.querySelector('.social__caption');
 const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
 const socialCommentCount = bigPictureElement.querySelector('.social__comment-count');
@@ -41,7 +41,11 @@ const renderComments = () => {
   socialCommentsElement.appendChild(commentsFragment);
 
   const displayedComments = Math.min((currentCommentPage + 1) * COMMENTS_PER_PAGE, currentComments.length);
-  socialCommentCount.textContent = `${displayedComments} из ${currentComments.length} комментариев`;
+
+  socialCommentCount.innerHTML = `
+    <span class="social__comment-shown-count">${displayedComments}</span> из
+    <span class="social__comment-total-count">${currentComments.length}</span> комментариев
+  `;
 
   if (displayedComments >= currentComments.length) {
     commentsLoader.classList.add('hidden');

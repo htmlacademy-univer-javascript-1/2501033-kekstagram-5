@@ -37,9 +37,12 @@ uploadCancelButton.addEventListener('click', (evt) => {
 
 const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
-    if (document.activeElement !== hashtagsInput && document.activeElement !== commentsTextarea) {
-      evt.preventDefault();
-      closeUploadOverlay();
+    const errorElement = document.querySelector('.error');
+    if (!errorElement) {
+      if (document.activeElement !== hashtagsInput && document.activeElement !== commentsTextarea) {
+        evt.preventDefault();
+        closeUploadOverlay();
+      }
     }
   }
 };
@@ -120,28 +123,44 @@ commentsTextarea.addEventListener('keydown', (evt) => {
 });
 
 const showErrorMessage = (message) => {
+  const existingError = document.querySelector('.error');
+  if (existingError) {
+    existingError.remove();
+  }
+
   const errorTemplate = document.querySelector('#error').content.cloneNode(true);
   const errorMessage = errorTemplate.querySelector('.error__title');
   errorMessage.textContent = message;
 
   document.body.append(errorTemplate);
 
-  const errorButton = document.querySelector('.error__button');
-  errorButton.addEventListener('click', () => {
-    document.querySelector('.error').remove();
-  });
+  const errorElement = document.querySelector('.error');
+  const errorButton = errorElement.querySelector('.error__button');
 
-  document.addEventListener('keydown', (evt) => {
+  const closeErrorMessage = () => {
+    errorElement.remove();
+    // eslint-disable-next-line no-use-before-define
+    document.removeEventListener('keydown', onErrorKeydown);
+    // eslint-disable-next-line no-use-before-define
+    document.removeEventListener('click', onOutsideClick);
+  };
+
+  const onErrorKeydown = (evt) => {
     if (evt.key === 'Escape') {
-      document.querySelector('.error').remove();
+      evt.preventDefault();
+      closeErrorMessage();
     }
-  });
+  };
 
-  document.addEventListener('click', (evt) => {
+  const onOutsideClick = (evt) => {
     if (!evt.target.closest('.error__inner')) {
-      document.querySelector('.error').remove();
+      closeErrorMessage();
     }
-  });
+  };
+
+  errorButton.addEventListener('click', closeErrorMessage);
+  document.addEventListener('keydown', onErrorKeydown);
+  document.addEventListener('click', onOutsideClick);
 };
 
 const showSuccessMessage = () => {

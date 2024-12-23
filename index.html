@@ -155,7 +155,7 @@
           </div>
 
           <!-- Комментарии к изображению -->
-          <div class="social__comment-count">5 из <span class="comments-count">125</span> комментариев</div>
+          <div class="social__comment-count"><span class="social__comment-shown-count">5</span> из <span class="social__comment-total-count">125</span> комментариев</div> <!--поменял класс для прохождения тестов-->
           <ul class="social__comments">
             <li class="social__comment">
               <img class="social__picture" src="img/avatar-4.svg" alt="Аватар комментатора фотографии" width="35" height="35">
@@ -217,6 +217,16 @@
       </div>
     </section>
   </template>
+
+    <!-- Сообщение с ошибкой загрузки изображения -->
+    <template id="data-error">
+      <section class="data-error">
+        <div class="data-error__inner">
+          <h2 class="data-error__title">Ошибка загрузки данных</h2>
+          <button type="button" class="data-error__button">Попробовать ещё раз</button>
+        </div>
+      </section>
+    </template>
 
   <!-- Сообщение об успешной загрузке изображения -->
   <template id="success">
