@@ -1,4 +1,5 @@
-const BASE_URL = 'https://29.javascript.htmlacademy.pro/kekstagram';
+const BASE_URL = 'https://32.javascript.htmlacademy.pro/kekstagram'; // для тестов
+//const BASE_URL = 'https://29.javascript.htmlacademy.pro/kekstagram'; // по тз
 
 const Route = {
   GET_DATA: '/data',
@@ -15,17 +16,60 @@ const ErrorText = {
   SEND_DATA: 'Не удалось отправить данные. Попробуйте ещё раз.',
 };
 
-const load = (route, errorText, method = Method.GET, body = null) =>
-  fetch(`${BASE_URL}${route}`, { method, body })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(errorText);
-      }
-      return response.json();
-    })
-    .catch(() => {
+const showDataErrorMessage = (message) => {
+  const existingDataError = document.querySelector('.data-error');
+  if (existingDataError) {
+    existingDataError.remove();
+  }
+
+  const existingError = document.querySelector('.error');
+  if (existingError) {
+    existingError.remove();
+  }
+
+  const dataErrorTemplate = document.querySelector('#data-error').content.cloneNode(true);
+  const dataErrorMessage = dataErrorTemplate.querySelector('.data-error__title');
+  dataErrorMessage.textContent = message;
+
+  document.body.append(dataErrorTemplate);
+
+  const dataErrorElement = document.querySelector('.data-error');
+  const dataErrorButton = dataErrorElement.querySelector('.data-error__button');
+
+  const closeDataErrorMessage = () => {
+    dataErrorElement.remove();
+    // eslint-disable-next-line no-use-before-define
+    document.removeEventListener('keydown', onDataErrorKeydown);
+  };
+
+  const onDataErrorKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closeDataErrorMessage();
+    }
+  };
+
+  dataErrorButton.addEventListener('click', closeDataErrorMessage);
+  document.addEventListener('keydown', onDataErrorKeydown);
+  document.addEventListener('click', (evt) => {
+    if (!evt.target.closest('.data-error__inner')) {
+      closeDataErrorMessage();
+    }
+  });
+};
+
+const load = async (route, errorText, method = Method.GET, body = null) => {
+  try {
+    const response = await fetch(`${BASE_URL}${route}`, { method, body });
+    if (!response.ok) {
       throw new Error(errorText);
-    });
+    }
+    return await response.json();
+  } catch {
+    showDataErrorMessage(errorText);
+    throw new Error(errorText);
+  }
+};
 
 const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
 

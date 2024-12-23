@@ -1214,7 +1214,8 @@ main {
 }
 
 .error__inner,
-.success__inner {
+.success__inner,
+.data-error__inner {
   position: relative;
   width: 600px;
   padding: 50px 20px;
@@ -1241,7 +1242,8 @@ main {
   padding-bottom: 75px;
 }
 
-.error__title {
+.error__title,
+.data-error__title {
   position: relative;
 
   margin: 0;
@@ -1275,7 +1277,8 @@ main {
 }
 
 .error__button,
-.success__button {
+.success__button,
+.data-error__button {
   padding: 5px 10px;
 
   color: #ffffff;
