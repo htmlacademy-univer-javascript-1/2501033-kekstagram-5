@@ -1,5 +1,4 @@
-const BASE_URL = 'https://32.javascript.htmlacademy.pro/kekstagram'; // для тестов
-//const BASE_URL = 'https://29.javascript.htmlacademy.pro/kekstagram'; // по тз
+const BASE_URL = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
 const Route = {
   GET_DATA: '/data',
@@ -36,21 +35,21 @@ const showDataErrorMessage = (message) => {
   const dataErrorElement = document.querySelector('.data-error');
   const dataErrorButton = dataErrorElement.querySelector('.data-error__button');
 
-  const closeDataErrorMessage = () => {
+  function closeDataErrorMessage() {
     dataErrorElement.remove();
-    // eslint-disable-next-line no-use-before-define
     document.removeEventListener('keydown', onDataErrorKeydown);
-  };
+  }
 
-  const onDataErrorKeydown = (evt) => {
+  function onDataErrorKeydown(evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       closeDataErrorMessage();
     }
-  };
+  }
 
   dataErrorButton.addEventListener('click', closeDataErrorMessage);
   document.addEventListener('keydown', onDataErrorKeydown);
+
   document.addEventListener('click', (evt) => {
     if (!evt.target.closest('.data-error__inner')) {
       closeDataErrorMessage();
